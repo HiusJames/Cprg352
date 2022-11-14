@@ -39,7 +39,8 @@
             </table>
             <table>
                 <tr>
-                    <th><button type="submit" class="btn btn-primary" name="action" value="remove">Delete</button></th>
+                    <th><button type="submit" class="btn btn-primary" name="action" value="delete">Delete</button></th>
+                    <th><button type="submit" class="btn btn-primary" name="action" value="remove">Remove</button></th>
                     <th><button type="submit" class="btn btn-primary" name="action" value="update">Edit</button></th>
                     <th><button type="submit" class="btn btn-primary" name="action" value="create">Create</button></th>
                 </tr>

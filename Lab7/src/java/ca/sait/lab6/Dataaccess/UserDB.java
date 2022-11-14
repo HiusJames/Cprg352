@@ -1,10 +1,6 @@
 package ca.sait.lab6.Dataaccess;
 
 import ca.sait.lab6.Models.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -65,7 +61,7 @@ public class UserDB {
         EntityManager em = emFactory.createEntityManager();
         User ref = em.find(User.class, user.getEmail());
 
-        ref.setActive(user.isActive());
+        ref.setActive(true);
         ref.setFirstName(user.getFirstName());
         ref.setLastName(user.getLastName());
         ref.setRole(user.getRole());
@@ -84,7 +80,7 @@ public class UserDB {
         }
     }
 
-    public void delete(User user) throws Exception {
+    public void remove(User user) throws Exception {
         EntityManagerFactory emFactory = DBUtil.getEmFactory();
 
         EntityManager em = emFactory.createEntityManager();
@@ -96,6 +92,31 @@ public class UserDB {
         try {
             trans.begin();
             em.remove(ref);
+            trans.commit();
+
+        } catch (Exception ex) {
+            trans.rollback();
+        } finally {
+            em.close();
+        }
+
+    }
+    
+    public void delete(User user) throws Exception {
+         EntityManagerFactory emFactory = DBUtil.getEmFactory();
+        EntityManager em = emFactory.createEntityManager();
+        User ref = em.find(User.class, user.getEmail());
+
+        ref.setActive(false);
+        ref.setFirstName(user.getFirstName());
+        ref.setLastName(user.getLastName());
+        ref.setRole(user.getRole());
+
+        EntityTransaction trans = em.getTransaction();
+
+        try {
+            trans.begin();
+            em.persist(ref);
             trans.commit();
 
         } catch (Exception ex) {

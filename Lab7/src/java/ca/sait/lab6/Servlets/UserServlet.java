@@ -28,18 +28,14 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         UserService service = new UserService();
 
-        
         try {
             List<User> users = service.getAll();
             request.setAttribute("users", users);
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-            
-        
 
-            this.getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 
     @Override
@@ -52,8 +48,7 @@ public class UserServlet extends HttpServlet {
         String fname = request.getParameter("fname");
         String lname = request.getParameter("lname");
         String password = request.getParameter("password");
-        int roleID = Integer.parseInt(request.getParameter("role"));
-        if (action.equals("remove")){
+        if (action.equals("delete")) {
             try {
                 service.delete(email);
                 response.sendRedirect("user");
@@ -61,13 +56,21 @@ public class UserServlet extends HttpServlet {
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else if (action.equals("update")){
+        } else if (action.equals("remove")) {
+            try {
+                service.remove(email);
+                response.sendRedirect("user");
+                return;
+            } catch (Exception ex) {
+                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (action.equals("update")) {
             try {
                 Role role = null;
                 List<Role> roles = rservice.getAll();
-                for (int i = 0; i < roles.size(); i++){
-                    if (roles.get(i).getId() == roleID){
+                int roleID = Integer.parseInt(request.getParameter("role"));
+                for (int i = 0; i < roles.size(); i++) {
+                    if (roles.get(i).getId() == roleID) {
                         role = roles.get(i);
                     }
                 }
@@ -77,14 +80,14 @@ public class UserServlet extends HttpServlet {
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else if (action.equals("create")) {
+        } else if (action.equals("create")) {
             String emailText = request.getParameter("emailText");
             try {
                 Role role = null;
                 List<Role> roles = rservice.getAll();
-                for (int i = 0; i < roles.size(); i++){
-                    if (roles.get(i).getId() == roleID){
+                int roleID = Integer.parseInt(request.getParameter("role"));
+                for (int i = 0; i < roles.size(); i++) {
+                    if (roles.get(i).getId() == roleID) {
                         role = roles.get(i);
                     }
                 }
@@ -95,8 +98,7 @@ public class UserServlet extends HttpServlet {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
+
         this.getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 
